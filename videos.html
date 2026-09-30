@@ -272,6 +272,17 @@
       yv69CuKjTPE: "i miss your love (Malvern Hills)",
     };
 
+    // Videos to hide from the grid, matched by title and the date shown on the card
+    const HIDDEN_VIDEOS = [
+      { title: "i miss your love", date: "Aug 1, 2026" },
+    ];
+
+    function isHidden(v) {
+      const title = v.title.toLowerCase();
+      const date = formatDate(v.publishedAt);
+      return HIDDEN_VIDEOS.some(h => title.includes(h.title.toLowerCase()) && date === h.date);
+    }
+
     function formatDate(iso) {
       const d = new Date(iso);
       return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
@@ -329,7 +340,7 @@
             item.snippet.thumbnails.high?.url ||
             item.snippet.thumbnails.medium?.url ||
             item.snippet.thumbnails.default?.url,
-        }));
+        })).filter(v => !isHidden(v));
 
         renderVideos(videos);
       } catch (err) {
