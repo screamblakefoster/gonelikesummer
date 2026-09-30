@@ -155,38 +155,6 @@
       margin: 0 auto;
     }
 
-    .show-tabs {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 28px;
-      font-size: 16px;
-      line-height: 1;
-    }
-
-    .show-tab {
-      color: var(--muted);
-      text-decoration: none;
-      transition: opacity 0.2s ease;
-    }
-
-    .show-tab:hover {
-      opacity: 0.6;
-    }
-
-    .show-tab.active {
-      color: var(--fg);
-      opacity: 1;
-      text-decoration: underline;
-      text-underline-offset: 5px;
-      text-decoration-thickness: 1px;
-    }
-
-    .show-tab-divider {
-      color: var(--line);
-    }
-
     .show-card {
       display: grid;
       grid-template-columns: 130px 1fr auto;
@@ -329,12 +297,6 @@
 
   <main>
     <section class="shows">
-      <div class="show-tabs" aria-label="Show history navigation">
-        <a class="show-tab active" href="shows.html">Upcoming</a>
-        <span class="show-tab-divider">|</span>
-        <a class="show-tab" href="past-shows.html">Past</a>
-      </div>
-
       <div class="empty-state">
         No shows announced yet — check back soon.
       </div>
