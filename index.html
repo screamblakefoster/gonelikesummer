@@ -88,125 +88,77 @@
     }
 
     /* =========================
-       FLIP CARD
+       SINKING UNDER HOVER
        ========================= */
 
-    .flip-card {
+    .card {
+      position: relative;
       width: 100%;
       aspect-ratio: 1 / 1;
-      perspective: 1200px;
+      overflow: hidden;
+      background: var(--card-bg);
       cursor: pointer;
     }
 
-    .flip-card-inner {
+    .card img {
       width: 100%;
       height: 100%;
-      position: relative;
-
-      transform-style: preserve-3d;
-
-      transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
-    }
-
-    .flip-card:hover .flip-card-inner {
-      transform: rotateY(180deg);
-    }
-
-    .flip-card-front,
-    .flip-card-back {
-      position: absolute;
-      inset: 0;
-
-      width: 100%;
-      height: 100%;
-
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-
-      overflow: hidden;
-    }
-
-    /* =========================
-       FRONT — ARTWORK
-       ========================= */
-
-    .flip-card-front {
-      background: var(--card-bg);
-    }
-
-    .flip-card-front img {
-      width: 100%;
-      height: 100%;
-
       object-fit: cover;
       display: block;
+      transform: translateY(0) scale(1.04);
+      filter: blur(0) saturate(1) brightness(1);
+      transition:
+        transform 1.1s cubic-bezier(0.4, 0, 0.2, 1),
+        filter 1.1s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* =========================
-       BACK — BLURRED ARTWORK
-       ========================= */
-
-    .flip-card-back {
-      transform: rotateY(180deg);
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      position: absolute;
-      overflow: hidden;
-
-      background: var(--card-bg);
+    .card:hover img {
+      transform: translateY(5%) scale(1.12);
+      filter: blur(3.5px) saturate(0.55) brightness(0.8);
     }
 
-    .flip-card-back::before {
-      content: "";
-
-      position: absolute;
-      inset: -30px;
-
-      background-image: var(--cover-art);
-      background-size: cover;
-      background-position: center;
-
-      filter: blur(22px);
-
-      transform: scale(1.12);
-    }
-
-    .flip-card-back::after {
-      content: "";
-
+    .tint {
       position: absolute;
       inset: 0;
-
-      background: rgba(0, 0, 0, 0.5);
-    }
-
-    .stream-link {
-      position: relative;
       z-index: 2;
-
-      width: 100%;
-      height: 100%;
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      color: #ffffff;
-
-      font-size: 19px;
-      letter-spacing: 0.02em;
-      font-style: italic;
-
-      text-decoration: none;
-
-      transition: opacity 0.2s ease;
+      pointer-events: none;
+      background: linear-gradient(
+        to bottom,
+        rgba(38, 54, 66, 0) 0%,
+        rgba(38, 54, 66, 0.35) 55%,
+        rgba(24, 36, 46, 0.72) 100%
+      );
+      mix-blend-mode: multiply;
+      opacity: 0;
+      transition: opacity 1.1s ease;
     }
 
-    .stream-link:hover {
-      opacity: 0.65;
+    .card:hover .tint {
+      opacity: 1;
+    }
+
+    .listen {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(215, 225, 230, 0.92);
+      font-style: italic;
+      font-size: 19px;
+      letter-spacing: 0.04em;
+      opacity: 0;
+      filter: blur(1px);
+      text-decoration: none;
+      transition:
+        opacity 0.7s ease 0.15s,
+        filter 0.7s ease 0.15s;
+    }
+
+    .card:hover .listen {
+      opacity: 1;
+      filter: blur(0);
     }
 
     /* =========================
@@ -276,7 +228,7 @@
         row-gap: 45px;
       }
 
-      .stream-link {
+      .listen {
         font-size: 17px;
       }
     }
@@ -318,7 +270,7 @@
         font-size: 17px;
       }
 
-      .stream-link {
+      .listen {
         font-size: 16px;
       }
     }
@@ -335,6 +287,14 @@
         font-size: 26px;
       }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card img,
+      .tint,
+      .listen {
+        transition: none;
+      }
+    }
   </style>
 </head>
 <body>
@@ -347,1488 +307,499 @@
   <main>
     <section class="grid">
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b27310cc49891cd8f2f6b47891a9"
-                alt="Strings"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b27310cc49891cd8f2f6b47891a9');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/4ImePhBTLyguJPoOYBkGBQ?si=t2Bi_1anS5uYLr7F4jNyYw"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b27310cc49891cd8f2f6b47891a9" alt="Strings">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/4ImePhBTLyguJPoOYBkGBQ?si=t2Bi_1anS5uYLr7F4jNyYw" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">Strings</span>
           <span class="song-date">Sep 25, 2026</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b2738b8b80bce17ecface4f229b5"
-                alt="Overwhelmed"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b2738b8b80bce17ecface4f229b5');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/7js3LUN7H9Ms69mBx6XHdf?si=kq2cpzbTSIOKtm_se4Z0Vw"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b2738b8b80bce17ecface4f229b5" alt="Overwhelmed">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/7js3LUN7H9Ms69mBx6XHdf?si=kq2cpzbTSIOKtm_se4Z0Vw" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">Overwhelmed</span>
           <span class="song-date">Sep 18, 2026</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273e4f004d2f9f861eca90c31d5"
-                alt="can't go back (Florida Keys)"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b273e4f004d2f9f861eca90c31d5');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/5nJo9JAAHPUdbrGXKNkNUL?si=RDBqVvzPRpeRpwPSIB8Lsw"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b273e4f004d2f9f861eca90c31d5" alt="can't go back (Florida Keys)">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/5nJo9JAAHPUdbrGXKNkNUL?si=RDBqVvzPRpeRpwPSIB8Lsw" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">can't go back (Florida Keys)</span>
           <span class="song-date">Sep 11, 2026</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273f475b8595f15e55f66b6bef2"
-                alt="crashing (Tundra)"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b273f475b8595f15e55f66b6bef2');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/5qAhQiNTqYLjYo9dmWVFTV?si=EOgByoG1RiOou_UychEUFg"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b273f475b8595f15e55f66b6bef2" alt="crashing (Tundra)">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/5qAhQiNTqYLjYo9dmWVFTV?si=EOgByoG1RiOou_UychEUFg" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">crashing (Tundra)</span>
           <span class="song-date">Aug 14, 2026</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273ed041697f7d6f673443f9428"
-                alt="misunderstood (Olympia)"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b273ed041697f7d6f673443f9428');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/0cOGqPYXykkW9mlY4SPrEn?si=FYBmLnCASGCVPWdtCmj6cA"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b273ed041697f7d6f673443f9428" alt="misunderstood (Olympia)">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/0cOGqPYXykkW9mlY4SPrEn?si=FYBmLnCASGCVPWdtCmj6cA" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">misunderstood (Olympia)</span>
           <span class="song-date">Aug 7, 2026</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b2739ff4ffbf2640cdb862afad43"
-                alt="i miss your love (Malvern Hills)"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b2739ff4ffbf2640cdb862afad43');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/75yVxyusUPdjaNxjAYIiSq?si=8UR-evIsTe6ZkwilEC44FQ"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b2739ff4ffbf2640cdb862afad43" alt="i miss your love (Malvern Hills)">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/75yVxyusUPdjaNxjAYIiSq?si=8UR-evIsTe6ZkwilEC44FQ" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">i miss your love (Malvern Hills)</span>
           <span class="song-date">Jul 31, 2026</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273562db19ec8152b72168570aa"
-                alt="Gasp"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b273562db19ec8152b72168570aa');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/5VwVJNmdMQmyD8HYzmUeLP?si=0Wh-NZRYTvCOcJTgA7PFgA"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b273562db19ec8152b72168570aa" alt="Gasp">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/5VwVJNmdMQmyD8HYzmUeLP?si=0Wh-NZRYTvCOcJTgA7PFgA" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">Gasp</span>
           <span class="song-date">May 1, 2026</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b2735e7bf536501bbd3e1475e623"
-                alt="Changing"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b2735e7bf536501bbd3e1475e623');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/5AjBhhKXTMTPQzprUSm5uR?si=5F8KgdecQRmbhAaGX7b92Q"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b2735e7bf536501bbd3e1475e623" alt="Changing">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/5AjBhhKXTMTPQzprUSm5uR?si=5F8KgdecQRmbhAaGX7b92Q" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">Changing</span>
           <span class="song-date">Feb 20, 2026</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273b4b5c0617093677957ef6114"
-                alt="All I Can Do"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b273b4b5c0617093677957ef6114');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/3OoXqMt34DkuQUlTl35QAp?si=hB1IKyubTkW1I_lUmiFMTg"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b273b4b5c0617093677957ef6114" alt="All I Can Do">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/3OoXqMt34DkuQUlTl35QAp?si=hB1IKyubTkW1I_lUmiFMTg" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">All I Can Do</span>
           <span class="song-date">Feb 13, 2026</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b2735b73fcbe1079fa9d9322798c"
-                alt="I Don't See The Light"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b2735b73fcbe1079fa9d9322798c');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/4eIrMCG53ULJmBgHgfWU1M?si=Fg2w0KuUSQ2MtnMXOih-wg"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b2735b73fcbe1079fa9d9322798c" alt="I Don't See The Light">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/4eIrMCG53ULJmBgHgfWU1M?si=Fg2w0KuUSQ2MtnMXOih-wg" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">I Don't See The Light</span>
           <span class="song-date">Jan 30, 2026</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273329202cf3e405c10457fe638"
-                alt="Desires"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b273329202cf3e405c10457fe638');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/3ytbRXe8daE6cJ4KYy4C2g?si=DqJQyvOaSE6hfPe0g0ZpyA"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b273329202cf3e405c10457fe638" alt="Desires">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/3ytbRXe8daE6cJ4KYy4C2g?si=DqJQyvOaSE6hfPe0g0ZpyA" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">Desires</span>
           <span class="song-date">Jan 23, 2026</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273bbcb545d167291ad866d5f8b"
-                alt="Unraveled"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b273bbcb545d167291ad866d5f8b');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/5RWt0Ozd7nyZcqCztefASY?si=GB2bOwuXQMOYsHnEiip-bA"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b273bbcb545d167291ad866d5f8b" alt="Unraveled">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/5RWt0Ozd7nyZcqCztefASY?si=GB2bOwuXQMOYsHnEiip-bA" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">Unraveled</span>
           <span class="song-date">Jan 16, 2026</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b2736d8abf83ea563f4066238745"
-                alt="Everything I Want"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b2736d8abf83ea563f4066238745');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/2Y2UYPrgUO815k2KTn30n3?si=GCL0j6U5Sta73SztGUDMeA"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b2736d8abf83ea563f4066238745" alt="Everything I Want">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/2Y2UYPrgUO815k2KTn30n3?si=GCL0j6U5Sta73SztGUDMeA" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">Everything I Want</span>
           <span class="song-date">Jan 2, 2026</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273e80d93d29b74b55483494c9e"
-                alt="Quiet Soldier"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b273e80d93d29b74b55483494c9e');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/5Mmhcd481QFKttxjBWa9FW?si=8bdQ_CLXRtKoCTMtT7ppvQ"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b273e80d93d29b74b55483494c9e" alt="Quiet Soldier">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/5Mmhcd481QFKttxjBWa9FW?si=8bdQ_CLXRtKoCTMtT7ppvQ" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">Quiet Soldier</span>
           <span class="song-date">Dec 26, 2025</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273227b993e279f494124e577f2"
-                alt="Love Is Still Cruel"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b273227b993e279f494124e577f2');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/3bnevaQVp3gfc3zNslLg3a?si=J6EFxt4MScS-3r2sA96sQw"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b273227b993e279f494124e577f2" alt="Love Is Still Cruel">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/3bnevaQVp3gfc3zNslLg3a?si=J6EFxt4MScS-3r2sA96sQw" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">Love Is Still Cruel</span>
           <span class="song-date">Dec 19, 2025</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273e338df33eaf6955719e7d188"
-                alt="Belief"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b273e338df33eaf6955719e7d188');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/1lfZTpg0IAZRQShQbCBRFr?si=_k1PX5xOTya7wbSsoHXMLQ"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b273e338df33eaf6955719e7d188" alt="Belief">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/1lfZTpg0IAZRQShQbCBRFr?si=_k1PX5xOTya7wbSsoHXMLQ" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">Belief</span>
           <span class="song-date">Dec 12, 2025</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273f35d0cedbdb9ba1e05c3b180"
-                alt="not on your own"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b273f35d0cedbdb9ba1e05c3b180');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/42A7cnvpAZTNOhSOSspxKa?si=xoz4kljITW6ECm1QV5y0fg"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b273f35d0cedbdb9ba1e05c3b180" alt="not on your own">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/42A7cnvpAZTNOhSOSspxKa?si=xoz4kljITW6ECm1QV5y0fg" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">not on your own</span>
           <span class="song-date">May 30, 2025</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273e6ae5a4aa5471b48778bb81a"
-                alt="slow dance"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b273e6ae5a4aa5471b48778bb81a');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/04PPDGf0Y2H2S4UVZGEX3g?si=nY6ZgoOeQrqZEdQlpTqdNA"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b273e6ae5a4aa5471b48778bb81a" alt="slow dance">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/04PPDGf0Y2H2S4UVZGEX3g?si=nY6ZgoOeQrqZEdQlpTqdNA" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">slow dance</span>
           <span class="song-date">Mar 21, 2025</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273265b884dc37090bc11898035"
-                alt="hopeless"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b273265b884dc37090bc11898035');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/7f3be7T22gWCJ2JY1eY479?si=VnY61enORVGn0VMqPzeSVg"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b273265b884dc37090bc11898035" alt="hopeless">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/7f3be7T22gWCJ2JY1eY479?si=VnY61enORVGn0VMqPzeSVg" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">hopeless</span>
           <span class="song-date">Feb 28, 2025</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b27362dbf648f30079e3c4c752a5"
-                alt="wish you were here"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b27362dbf648f30079e3c4c752a5');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/6oaJc9fDlX5DxVZD5aRYIg?si=bkfVeKIUTbG2CuZU3PfJkQ"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b27362dbf648f30079e3c4c752a5" alt="wish you were here">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/6oaJc9fDlX5DxVZD5aRYIg?si=bkfVeKIUTbG2CuZU3PfJkQ" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">wish you were here</span>
           <span class="song-date">Feb 21, 2025</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b2733c1ac63ff974da4e0b1475bd"
-                alt="when i needed you most"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b2733c1ac63ff974da4e0b1475bd');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/6ycgvKuULzCNVb8zlgBI8f?si=tm9tktfPQX2i-Li9UBFGww"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b2733c1ac63ff974da4e0b1475bd" alt="when i needed you most">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/6ycgvKuULzCNVb8zlgBI8f?si=tm9tktfPQX2i-Li9UBFGww" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">when i needed you most</span>
           <span class="song-date">Feb 14, 2025</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b27306e5b1c9c4743735320df627"
-                alt="Fall Like Autumn"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b27306e5b1c9c4743735320df627');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/7J7rRNc6WqUtd4JHbEQJwX?si=UUKhYf2NS1y9UowMCOblFA"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b27306e5b1c9c4743735320df627" alt="Fall Like Autumn">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/7J7rRNc6WqUtd4JHbEQJwX?si=UUKhYf2NS1y9UowMCOblFA" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">Fall Like Autumn</span>
           <span class="song-date">Dec 6, 2024</span>
         </div>
-
         <div class="song-type">Album</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273510ad014b2fdcfd7784e3bbb"
-                alt="tapping out"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b273510ad014b2fdcfd7784e3bbb');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/6Hoq5FgG6nwlBCDRAG46SF?si=Xzg-Pl1TR0WkldbbG1hosw"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b273510ad014b2fdcfd7784e3bbb" alt="tapping out">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/6Hoq5FgG6nwlBCDRAG46SF?si=Xzg-Pl1TR0WkldbbG1hosw" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">tapping out</span>
           <span class="song-date">Nov 29, 2024</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b27388cdc892286c4698a9b98c29"
-                alt="crashing"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b27388cdc892286c4698a9b98c29');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/3PQX3gMfKqW8iufv6W9URV?si=eWek3GsvSJqk_rBCFdA0lA"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b27388cdc892286c4698a9b98c29" alt="crashing">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/3PQX3gMfKqW8iufv6W9URV?si=eWek3GsvSJqk_rBCFdA0lA" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">crashing</span>
           <span class="song-date">Nov 22, 2024</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273f8b8f643688742337799cb63"
-                alt="numb"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b273f8b8f643688742337799cb63');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/2PSnqoSktHHxHnci27drOI?si=12kBqkoJTG-zvL3ILUeqQA"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b273f8b8f643688742337799cb63" alt="numb">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/2PSnqoSktHHxHnci27drOI?si=12kBqkoJTG-zvL3ILUeqQA" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">numb</span>
           <span class="song-date">Nov 8, 2024</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b27331e644ea1c2fdb20de6b3e15"
-                alt="i miss your love"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b27331e644ea1c2fdb20de6b3e15');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/31ELaAv4hVdfeoD89VKsxQ?si=89tqW1uASbexJambeGuIew"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b27331e644ea1c2fdb20de6b3e15" alt="i miss your love">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/31ELaAv4hVdfeoD89VKsxQ?si=89tqW1uASbexJambeGuIew" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">i miss your love</span>
           <span class="song-date">Oct 25, 2024</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b2737747beb457b57718fd47d683"
-                alt="i'm not what you want"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b2737747beb457b57718fd47d683');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/0DcfU1NwIanF3zt8MvLj4V?si=WX908NCdQFC2B2OJUJHgrw"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b2737747beb457b57718fd47d683" alt="i'm not what you want">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/0DcfU1NwIanF3zt8MvLj4V?si=WX908NCdQFC2B2OJUJHgrw" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">i'm not what you want</span>
           <span class="song-date">Oct 11, 2024</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b2737242206aa7178be0ff92b069"
-                alt="can't go back"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b2737242206aa7178be0ff92b069');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/2M4EZbrL5TUJcy6AU4Ly5S?si=Ked0TxDtQ9O76BEgxHN6QQ"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b2737242206aa7178be0ff92b069" alt="can't go back">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/2M4EZbrL5TUJcy6AU4Ly5S?si=Ked0TxDtQ9O76BEgxHN6QQ" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">can't go back</span>
           <span class="song-date">Oct 4, 2024</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273219ca5497a798946e2097353"
-                alt="wish i knew this all before"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b273219ca5497a798946e2097353');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/650aXSttN7FyWaNK3ANvGF?si=eC1vmfNOQcagxianz6lOSA"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b273219ca5497a798946e2097353" alt="wish i knew this all before">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/650aXSttN7FyWaNK3ANvGF?si=eC1vmfNOQcagxianz6lOSA" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">wish i knew this all before</span>
           <span class="song-date">Sep 20, 2024</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b2735d9a0a55de58e711a460c243"
-                alt="Forever Again"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b2735d9a0a55de58e711a460c243');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/1p3fMSJ1rziSlhxW80RFx4?si=NnFQNEELRficbzVempkHoA"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b2735d9a0a55de58e711a460c243" alt="Forever Again">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/1p3fMSJ1rziSlhxW80RFx4?si=NnFQNEELRficbzVempkHoA" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">Forever Again</span>
           <span class="song-date">Aug 23, 2024</span>
         </div>
-
         <div class="song-type">Album</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b2730d9503e3c727be70300a1961"
-                alt="one can dream"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b2730d9503e3c727be70300a1961');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/1XdkoTJi8eglIcWdngdEyu?si=Z5V2kujrR1uBT0Q5hqZ1zw"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b2730d9503e3c727be70300a1961" alt="one can dream">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/1XdkoTJi8eglIcWdngdEyu?si=Z5V2kujrR1uBT0Q5hqZ1zw" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">one can dream</span>
           <span class="song-date">Aug 9, 2024</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273df6df9239e88f462100503ac"
-                alt="i'm off the deep end"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b273df6df9239e88f462100503ac');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/1fiTqYw6YZfe4BylpkiQAl?si=MQa4IZYRTXuevligoxZ28g"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b273df6df9239e88f462100503ac" alt="i'm off the deep end">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/1fiTqYw6YZfe4BylpkiQAl?si=MQa4IZYRTXuevligoxZ28g" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">i'm off the deep end</span>
           <span class="song-date">Aug 2, 2024</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273d54e12c24fbfce295e80b81b"
-                alt="it never ends"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b273d54e12c24fbfce295e80b81b');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/5t53pum6bb2p30IZGarhMU?si=29CN_tNoRImIB9HctQ-JJg"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b273d54e12c24fbfce295e80b81b" alt="it never ends">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/5t53pum6bb2p30IZGarhMU?si=29CN_tNoRImIB9HctQ-JJg" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">it never ends</span>
           <span class="song-date">Jul 12, 2024</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273bc635fabdd334b0bea48d3dc"
-                alt="where is my someone"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b273bc635fabdd334b0bea48d3dc');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/5EGY7QVM0RdKMoXSuMQEEZ?si=jeHJpvPmTPCizs2a3ykUxA"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b273bc635fabdd334b0bea48d3dc" alt="where is my someone">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/5EGY7QVM0RdKMoXSuMQEEZ?si=jeHJpvPmTPCizs2a3ykUxA" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">where is my someone</span>
           <span class="song-date">Jul 5, 2024</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b2733fe712a059e47744756093fe"
-                alt="a good way to stay sad forever"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b2733fe712a059e47744756093fe');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/4KkMpRYnaJl4VqbzqYjbhr?si=vtxbNb-NQGSid66-SXmO6A"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b2733fe712a059e47744756093fe" alt="a good way to stay sad forever">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/4KkMpRYnaJl4VqbzqYjbhr?si=vtxbNb-NQGSid66-SXmO6A" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">a good way to stay sad forever</span>
           <span class="song-date">Jun 28, 2024</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b27387bd12ab1540fef28906c18a"
-                alt="misunderstood"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b27387bd12ab1540fef28906c18a');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/2xjqN5MRLQu39211qurnru?si=MSNufHZWTXWy4LhpX48K9Q"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b27387bd12ab1540fef28906c18a" alt="misunderstood">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/2xjqN5MRLQu39211qurnru?si=MSNufHZWTXWy4LhpX48K9Q" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">misunderstood</span>
           <span class="song-date">Jun 21, 2024</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273c1859e77cfb91b397408ce6f"
-                alt="hope she comes home"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b273c1859e77cfb91b397408ce6f');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/2wZQmPfpvAMfCURmRSaveZ?si=kKqLnLuuQvqthB4xNOIyog"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b273c1859e77cfb91b397408ce6f" alt="hope she comes home">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/2wZQmPfpvAMfCURmRSaveZ?si=kKqLnLuuQvqthB4xNOIyog" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">hope she comes home</span>
           <span class="song-date">Jun 14, 2024</span>
         </div>
-
         <div class="song-type">Single</div>
-
       </article>
 
-
       <article class="song">
-
-        <div class="flip-card">
-          <div class="flip-card-inner">
-
-            <div class="flip-card-front">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b2735d91418da050842e65ec24ee"
-                alt="gone like summer"
-              >
-            </div>
-
-            <div
-              class="flip-card-back"
-              style="--cover-art: url('https://i.scdn.co/image/ab67616d0000b2735d91418da050842e65ec24ee');"
-            >
-              <a
-                class="stream-link"
-                href="https://open.spotify.com/album/77kMI95x6wUCdqIda92KjF?si=lG2lkgKOSqC-jij04xWoyw"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LISTEN
-              </a>
-            </div>
-
-          </div>
+        <div class="card">
+          <img src="https://i.scdn.co/image/ab67616d0000b2735d91418da050842e65ec24ee" alt="gone like summer">
+          <div class="tint"></div>
+          <a class="listen" href="https://open.spotify.com/album/77kMI95x6wUCdqIda92KjF?si=lG2lkgKOSqC-jij04xWoyw" target="_blank" rel="noopener noreferrer">LISTEN</a>
         </div>
-
         <div class="song-meta">
           <span class="song-title">gone like summer</span>
           <span class="song-date">Apr 26, 2024</span>
         </div>
-
         <div class="song-type">Album</div>
-
       </article>
-
     </section>
   </main>
 
