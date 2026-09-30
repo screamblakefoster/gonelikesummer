@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>gone like summer — Shop</title>
+
+  <style>
+
+    :root {
+      --bg: #f7f5f0;
+      --fg: #1a1a1a;
+      --muted: #767267;
+      --card-bg: #eae6dc;
+      --line: #e2ddd0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    body {
+      font-family: "Times New Roman", Times, serif;
+      font-weight: 400;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    header {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 65px 30px 50px;
+      text-align: center;
+    }
+
+    .site-title {
+      font-size: 44px;
+      letter-spacing: 0.01em;
+      margin: 0;
+      font-weight: 400;
+    }
+
+    .site-subtitle {
+      color: var(--muted);
+      font-size: 15px;
+      margin-top: 10px;
+      font-style: italic;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 34px;
+      font-size: 18px;
+      line-height: 1;
+      margin-top: 26px;
+    }
+
+    nav a {
+      color: var(--fg);
+      opacity: 0.55;
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+
+    nav a:hover {
+      opacity: 1;
+    }
+
+    nav a.active {
+      opacity: 1;
+      text-decoration: underline;
+      text-underline-offset: 6px;
+      text-decoration-thickness: 1px;
+    }
+
+    footer {
+      padding: 40px 30px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      border-top: 1px solid var(--line);
+      margin-top: 20px;
+    }
+
+    @media (max-width: 900px) {
+      header {
+        padding: 50px 20px 40px;
+      }
+      .site-title {
+        font-size: 36px;
+      }
+      nav {
+        gap: 24px;
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      header {
+        padding: 40px 18px 30px;
+      }
+      .site-title {
+        font-size: 30px;
+      }
+      nav {
+        gap: 16px;
+        flex-wrap: wrap;
+        font-size: 15px;
+      }
+    }
+
+
+    main {
+      min-height: 40vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 30px 100px;
+      text-align: center;
+    }
+
+    .coming-soon {
+      font-size: 26px;
+      font-style: italic;
+      color: var(--muted);
+    }
+
+    @media (max-width: 650px) {
+      .coming-soon {
+        font-size: 22px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 class="site-title">gone like summer</h1>
+
+    <nav aria-label="Main navigation">
+      <a href="music.html">music</a>
+      <a href="shows.html">shows</a>
+      <a href="about.html">about</a>
+      <a href="videos.html">videos</a>
+      <a class="active" href="shop.html" aria-current="page">shop</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="coming-soon">
+      Coming Soon
+    </div>
+  </main>
+
+  <footer>
+    © 2026 gone like summer
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>gone like summer — About</title>
+
+  <style>
+
+    :root {
+      --bg: #f7f5f0;
+      --fg: #1a1a1a;
+      --muted: #767267;
+      --card-bg: #eae6dc;
+      --line: #e2ddd0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    body {
+      font-family: "Times New Roman", Times, serif;
+      font-weight: 400;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    header {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 65px 30px 50px;
+      text-align: center;
+    }
+
+    .site-title {
+      font-size: 44px;
+      letter-spacing: 0.01em;
+      margin: 0;
+      font-weight: 400;
+    }
+
+    .site-subtitle {
+      color: var(--muted);
+      font-size: 15px;
+      margin-top: 10px;
+      font-style: italic;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 34px;
+      font-size: 18px;
+      line-height: 1;
+      margin-top: 26px;
+    }
+
+    nav a {
+      color: var(--fg);
+      opacity: 0.55;
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+
+    nav a:hover {
+      opacity: 1;
+    }
+
+    nav a.active {
+      opacity: 1;
+      text-decoration: underline;
+      text-underline-offset: 6px;
+      text-decoration-thickness: 1px;
+    }
+
+    footer {
+      padding: 40px 30px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      border-top: 1px solid var(--line);
+      margin-top: 20px;
+    }
+
+    @media (max-width: 900px) {
+      header {
+        padding: 50px 20px 40px;
+      }
+      .site-title {
+        font-size: 36px;
+      }
+      nav {
+        gap: 24px;
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      header {
+        padding: 40px 18px 30px;
+      }
+      .site-title {
+        font-size: 30px;
+      }
+      nav {
+        gap: 16px;
+        flex-wrap: wrap;
+        font-size: 15px;
+      }
+    }
+
+
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 30px 100px;
+    }
+
+    .story {
+      font-size: 20px;
+      line-height: 1.5;
+      color: var(--fg);
+    }
+
+    .story p {
+      margin: 0 0 26px 0;
+    }
+
+    .story p:last-child {
+      margin-bottom: 0;
+    }
+
+    .placeholder-note {
+      color: var(--muted);
+      font-size: 13px;
+      font-style: italic;
+      margin-top: 40px;
+      border-top: 1px solid var(--line);
+      padding-top: 24px;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        padding: 0 20px 80px;
+      }
+      .story {
+        font-size: 18px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      main {
+        padding: 0 18px 70px;
+      }
+      .story {
+        font-size: 17px;
+        line-height: 1.55;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 class="site-title">gone like summer</h1>
+
+    <nav aria-label="Main navigation">
+      <a href="music.html">music</a>
+      <a href="shows.html">shows</a>
+      <a class="active" href="about.html" aria-current="page">about</a>
+      <a href="videos.html">videos</a>
+      <a href="shop.html">shop</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="story">
+      <p>
+        This is where the gone like summer story goes — how it started, what it's about, what it sounds like. Drop your bio text in here whenever you're ready.
+      </p>
+    </div>
+
+    <div class="placeholder-note">
+      Placeholder text — replace this paragraph with the real story whenever you have it.
+    </div>
+  </main>
+
+  <footer>
+    © 2026 gone like summer
+  </footer>
+
+</body>
+</html>

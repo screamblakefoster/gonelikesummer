@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>gone like summer — Videos</title>
+
+  <style>
+
+    :root {
+      --bg: #f7f5f0;
+      --fg: #1a1a1a;
+      --muted: #767267;
+      --card-bg: #eae6dc;
+      --line: #e2ddd0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    body {
+      font-family: "Times New Roman", Times, serif;
+      font-weight: 400;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    header {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 65px 30px 50px;
+      text-align: center;
+    }
+
+    .site-title {
+      font-size: 44px;
+      letter-spacing: 0.01em;
+      margin: 0;
+      font-weight: 400;
+    }
+
+    .site-subtitle {
+      color: var(--muted);
+      font-size: 15px;
+      margin-top: 10px;
+      font-style: italic;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 34px;
+      font-size: 18px;
+      line-height: 1;
+      margin-top: 26px;
+    }
+
+    nav a {
+      color: var(--fg);
+      opacity: 0.55;
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+
+    nav a:hover {
+      opacity: 1;
+    }
+
+    nav a.active {
+      opacity: 1;
+      text-decoration: underline;
+      text-underline-offset: 6px;
+      text-decoration-thickness: 1px;
+    }
+
+    footer {
+      padding: 40px 30px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      border-top: 1px solid var(--line);
+      margin-top: 20px;
+    }
+
+    @media (max-width: 900px) {
+      header {
+        padding: 50px 20px 40px;
+      }
+      .site-title {
+        font-size: 36px;
+      }
+      nav {
+        gap: 24px;
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      header {
+        padding: 40px 18px 30px;
+      }
+      .site-title {
+        font-size: 30px;
+      }
+      nav {
+        gap: 16px;
+        flex-wrap: wrap;
+        font-size: 15px;
+      }
+    }
+
+
+    main {
+      padding: 0 30px 100px;
+    }
+
+    .grid {
+      width: 100%;
+      max-width: 1500px;
+      margin: 0 auto;
+
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+
+      column-gap: 26px;
+      row-gap: 42px;
+    }
+
+    .video-card {
+      display: block;
+      cursor: pointer;
+    }
+
+    .video-thumb {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: var(--card-bg);
+    }
+
+    .video-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.3s ease;
+    }
+
+    .video-card:hover .video-thumb img {
+      opacity: 0.75;
+    }
+
+    .video-title {
+      margin-top: 12px;
+      font-size: 17px;
+      line-height: 1.3;
+    }
+
+    .video-date {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .status-message {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+      font-size: 18px;
+      font-style: italic;
+      display: none;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        padding: 0 20px 80px;
+      }
+      .grid {
+        column-gap: 18px;
+        row-gap: 34px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      main {
+        padding: 0 18px 70px;
+      }
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 14px;
+        row-gap: 30px;
+      }
+      .video-title {
+        font-size: 15px;
+      }
+    }
+
+    @media (max-width: 450px) {
+      .grid {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 class="site-title">gone like summer</h1>
+
+    <nav aria-label="Main navigation">
+      <a href="music.html">music</a>
+      <a href="shows.html">shows</a>
+      <a href="about.html">about</a>
+      <a class="active" href="videos.html" aria-current="page">videos</a>
+      <a href="shop.html">shop</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="grid"></section>
+    <div class="status-message"></div>
+  </main>
+
+  <footer>
+    © 2026 gone like summer
+  </footer>
+
+
+  <script>
+    const YT_API_KEY = "AIzaSyCsbKCgkuUGbnCRb7E8-Qio61M22N6TxdY";
+    const YT_HANDLE = "@gonelikesum";
+    const YT_MAX_VIDEOS = 50;
+
+    function formatDate(iso) {
+      const d = new Date(iso);
+      return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    }
+
+    function renderVideos(videos) {
+      const grid = document.querySelector(".grid");
+      const status = document.querySelector(".status-message");
+
+      if (!videos.length) {
+        status.textContent = "No videos yet — check back soon.";
+        status.style.display = "block";
+        return;
+      }
+
+      grid.innerHTML = videos.map(v => `
+        <a class="video-card" href="https://www.youtube.com/watch?v=${v.id}" target="_blank" rel="noopener noreferrer">
+          <div class="video-thumb">
+            <img src="${v.thumbnail}" alt="${v.title}">
+          </div>
+          <div class="video-title">${v.title}</div>
+          <div class="video-date">${formatDate(v.publishedAt)}</div>
+        </a>
+      `).join("");
+    }
+
+    async function loadYouTubeVideos() {
+      const status = document.querySelector(".status-message");
+      try {
+        const channelRes = await fetch(
+          `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&forHandle=${encodeURIComponent(YT_HANDLE)}&key=${YT_API_KEY}`
+        );
+        const channelData = await channelRes.json();
+
+        if (!channelData.items || !channelData.items.length) {
+          throw new Error("Channel not found");
+        }
+
+        const uploadsPlaylistId = channelData.items[0].contentDetails.relatedPlaylists.uploads;
+
+        const videosRes = await fetch(
+          `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=${YT_MAX_VIDEOS}&playlistId=${uploadsPlaylistId}&key=${YT_API_KEY}`
+        );
+        const videosData = await videosRes.json();
+
+        if (!videosData.items) {
+          throw new Error("No videos found");
+        }
+
+        const videos = videosData.items.map(item => ({
+          id: item.snippet.resourceId.videoId,
+          title: item.snippet.title,
+          publishedAt: item.snippet.publishedAt,
+          thumbnail:
+            item.snippet.thumbnails.high?.url ||
+            item.snippet.thumbnails.medium?.url ||
+            item.snippet.thumbnails.default?.url,
+        }));
+
+        renderVideos(videos);
+      } catch (err) {
+        console.error("Failed to load YouTube videos:", err);
+        status.textContent = "Couldn't load videos right now — check back soon.";
+        status.style.display = "block";
+      }
+    }
+
+    loadYouTubeVideos();
+  </script>
+
+</body>
+</html>
