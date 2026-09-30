@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+
+  <title>gone like summer — Private</title>
+
+  <link rel="icon" href="favicon.ico">
+
+  <style>
+
+    :root {
+      --bg: #f7f5f0;
+      --fg: #1a1a1a;
+      --muted: #767267;
+      --card-bg: #eae6dc;
+      --line: #e2ddd0;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    body {
+      font-family: "Times New Roman", Times, serif;
+      font-weight: 400;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* =========================
+       GATE
+       ========================= */
+
+    #gate {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      padding: 30px;
+      text-align: center;
+      transition: opacity 0.6s ease;
+    }
+
+    #gate.unlocked {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .gate-title {
+      font-size: 30px;
+      margin: 0 0 8px;
+      letter-spacing: 0.01em;
+    }
+
+    .gate-sub {
+      color: var(--muted);
+      font-size: 14px;
+      font-style: italic;
+      margin-bottom: 34px;
+    }
+
+    .gate-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    #gate-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--fg);
+      font-family: "Times New Roman", Times, serif;
+      font-size: 20px;
+      text-align: center;
+      color: var(--fg);
+      padding: 8px 0;
+      letter-spacing: 0.08em;
+    }
+
+    #gate-input:focus {
+      outline: none;
+      border-bottom: 1px solid var(--fg);
+    }
+
+    #gate-submit {
+      background: none;
+      border: none;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 16px;
+      font-style: italic;
+      color: var(--fg);
+      cursor: pointer;
+      border-bottom: 1px solid var(--fg);
+      padding-bottom: 2px;
+      transition: opacity 0.2s ease;
+    }
+
+    #gate-submit:hover {
+      opacity: 0.6;
+    }
+
+    .gate-error {
+      color: var(--muted);
+      font-size: 13px;
+      font-style: italic;
+      height: 16px;
+      margin-top: -4px;
+    }
+
+    /* =========================
+       CONTENT
+       ========================= */
+
+    #content {
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    #content.visible {
+      opacity: 1;
+    }
+
+    header {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 65px 30px 20px;
+      text-align: center;
+    }
+
+    .site-title {
+      font-size: 40px;
+      letter-spacing: 0.01em;
+      margin: 0;
+      font-weight: 400;
+    }
+
+    .page-note {
+      color: var(--muted);
+      font-size: 14px;
+      font-style: italic;
+      margin-top: 12px;
+      max-width: 420px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 30px 100px;
+    }
+
+    .strip-block {
+      margin-bottom: 64px;
+    }
+
+    .strip-block:last-child {
+      margin-bottom: 0;
+    }
+
+    .strip-frame {
+      width: 100%;
+      background: #fdfcfa;
+      padding: 22px 18px 26px;
+      box-shadow: 0 1px 0 var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .strip-frame img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .strip-caption {
+      margin-top: 14px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    footer {
+      padding: 40px 30px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 650px) {
+      header {
+        padding: 50px 20px 16px;
+      }
+      .site-title {
+        font-size: 30px;
+      }
+      main {
+        padding: 30px 18px 80px;
+      }
+      .strip-block {
+        margin-bottom: 48px;
+      }
+      .strip-frame {
+        padding: 16px 12px 20px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div id="gate">
+    <h1 class="gate-title">gone like summer</h1>
+    <div class="gate-sub">this page is private</div>
+
+    <form class="gate-form" id="gate-form" autocomplete="off">
+      <input type="password" id="gate-input" placeholder="password" autofocus>
+      <div class="gate-error" id="gate-error"></div>
+      <button type="submit" id="gate-submit">ENTER</button>
+    </form>
+  </div>
+
+  <div id="content">
+
+    <header>
+      <h1 class="site-title">panda cam</h1>
+      <div class="page-note">a few strips from the panda cam, developed and scanned as-is.</div>
+    </header>
+
+    <main>
+
+      <div class="strip-block">
+        <div class="strip-frame">
+          <img src="photostrips/panda-strip-1.jpg" alt="Panda cam strip 1">
+        </div>
+        <div class="strip-caption">Roll 01</div>
+      </div>
+
+      <div class="strip-block">
+        <div class="strip-frame">
+          <img src="photostrips/panda-strip-2.jpg" alt="Panda cam strip 2">
+        </div>
+        <div class="strip-caption">Roll 02</div>
+      </div>
+
+      <div class="strip-block">
+        <div class="strip-frame">
+          <img src="photostrips/panda-strip-3.jpg" alt="Panda cam strip 3">
+        </div>
+        <div class="strip-caption">Roll 03</div>
+      </div>
+
+      <div class="strip-block">
+        <div class="strip-frame">
+          <img src="photostrips/panda-strip-4.jpg" alt="Panda cam strip 4">
+        </div>
+        <div class="strip-caption">Roll 04</div>
+      </div>
+
+    </main>
+
+    <footer>
+      © 2026 gone like summer
+    </footer>
+
+  </div>
+
+
+  <script>
+    const PASSWORD = "glspandacam";
+    const STORAGE_KEY = "gls-panda-unlocked";
+
+    const gate = document.getElementById("gate");
+    const content = document.getElementById("content");
+    const form = document.getElementById("gate-form");
+    const input = document.getElementById("gate-input");
+    const error = document.getElementById("gate-error");
+
+    function unlock() {
+      gate.classList.add("unlocked");
+      content.classList.add("visible");
+      try { sessionStorage.setItem(STORAGE_KEY, "1"); } catch (e) {}
+    }
+
+    try {
+      if (sessionStorage.getItem(STORAGE_KEY) === "1") {
+        unlock();
+      }
+    } catch (e) {}
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (input.value.trim().toLowerCase() === PASSWORD) {
+        unlock();
+      } else {
+        error.textContent = "wrong password";
+        input.value = "";
+        input.focus();
+      }
+    });
+  </script>
+
+</body>
+</html>
