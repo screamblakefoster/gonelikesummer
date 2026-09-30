@@ -37,7 +37,13 @@
     main {
       max-width: 700px;
       margin: 0 auto;
-      padding: 0 30px 40px;
+      padding: 0 30px;
+    }
+
+    .strips-wrap {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 20px 40px;
     }
 
     .strip-block {
@@ -184,6 +190,9 @@
 
     @media (max-width: 650px) {
       main {
+        padding: 0 18px;
+      }
+      .strips-wrap {
         padding: 0 18px 30px;
       }
       .strip-block {
@@ -213,6 +222,10 @@
 
     <div class="scroll-hint">⟵ scroll ⟶</div>
 
+  </main>
+
+  <div class="strips-wrap">
+
     <div class="strip-block from-left">
       <div class="strip-frame">
         <img src="photostrips/panda-strip-1.jpg" alt="Panda cam strip 1">
@@ -237,7 +250,7 @@
       </div>
     </div>
 
-  </main>
+  </div>
 
   <script>
     const PASSWORD = "glspandacam";
