@@ -73,12 +73,29 @@
 
     .strip-frame {
       width: 100%;
+      aspect-ratio: 1.91 / 1;
+      overflow-x: auto;
+      overflow-y: hidden;
+      cursor: grab;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .strip-frame::-webkit-scrollbar {
+      display: none;
+    }
+
+    .strip-frame.dragging {
+      cursor: grabbing;
     }
 
     .strip-frame img {
-      width: 100%;
-      height: auto;
+      width: 400%;
+      height: 100%;
       display: block;
+      max-width: none;
+      user-select: none;
+      -webkit-user-drag: none;
     }
 
 
@@ -112,6 +129,7 @@
       border: none;
       border-bottom: 1px solid var(--fg);
       font-family: "Times New Roman", Times, serif;
+      font-style: italic;
       font-size: 20px;
       text-align: center;
       color: var(--fg);
@@ -178,7 +196,7 @@
 
     <div class="entry entry-top">
       <form class="entry-form" id="entry-form" autocomplete="off">
-        <input type="password" id="entry-input" placeholder="password">
+        <input type="text" id="entry-input" placeholder="password" autocomplete="off" autocapitalize="off" spellcheck="false">
         <div class="entry-error" id="entry-error"></div>
         <button type="submit" id="entry-submit">ENTER</button>
       </form>
@@ -234,6 +252,44 @@
         setTimeout(() => {
           el.classList.add("in");
         }, 300 + i * 220);
+      });
+
+      // Wheel scroll (vertical wheel/trackpad input slides the strip horizontally)
+      const frames = document.querySelectorAll(".strip-frame");
+      frames.forEach((frame) => {
+        frame.addEventListener(
+          "wheel",
+          (e) => {
+            const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+            frame.scrollLeft += delta;
+            e.preventDefault();
+          },
+          { passive: false }
+        );
+
+        // Click-and-drag scroll
+        let isDown = false;
+        let startX = 0;
+        let startScroll = 0;
+
+        frame.addEventListener("mousedown", (e) => {
+          isDown = true;
+          frame.classList.add("dragging");
+          startX = e.pageX;
+          startScroll = frame.scrollLeft;
+        });
+
+        window.addEventListener("mouseup", () => {
+          isDown = false;
+          frame.classList.remove("dragging");
+        });
+
+        window.addEventListener("mousemove", (e) => {
+          if (!isDown) return;
+          e.preventDefault();
+          const dx = e.pageX - startX;
+          frame.scrollLeft = startScroll - dx;
+        });
       });
     });
   </script>
