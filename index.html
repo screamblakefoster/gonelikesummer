@@ -143,7 +143,7 @@
       width: 100%;
       max-width: 460px;
       aspect-ratio: 1 / 1;
-      margin: 0 auto;
+      margin: 46px auto 0;
       overflow: hidden;
       background: var(--card-bg);
     }
@@ -172,7 +172,7 @@
       display: flex;
       justify-content: center;
       gap: 34px;
-      margin-top: 46px;
+      margin-top: 0;
     }
 
     .countdown-unit {
@@ -200,7 +200,7 @@
       display: none;
       font-size: 24px;
       font-style: italic;
-      margin-top: 46px;
+      margin-top: 0;
     }
 
     .listen-link {
@@ -226,12 +226,15 @@
       main {
         padding: 0 18px 80px;
       }
+      .hero-cover {
+        margin-top: 38px;
+      }
       .album-title {
         font-size: 26px;
       }
       .countdown {
         gap: 18px;
-        margin-top: 38px;
+        margin-top: 0;
       }
       .countdown-number {
         font-size: 38px;
@@ -271,13 +274,6 @@
   <main>
     <div class="hero">
 
-      <div class="hero-cover">
-        <img src="https://i.scdn.co/image/ab67616d0000b273ecccab25611df98f21fac3e3" alt="You">
-      </div>
-
-      <div class="album-title">"You"</div>
-      <div class="album-sub">out Friday, October 2</div>
-
       <div class="countdown">
         <div class="countdown-unit">
           <span class="countdown-number" data-unit="days">00</span>
@@ -298,6 +294,13 @@
       </div>
 
       <div class="countdown-done">out now</div>
+
+      <div class="hero-cover">
+        <img src="https://i.scdn.co/image/ab67616d0000b273ecccab25611df98f21fac3e3" alt="You">
+      </div>
+
+      <div class="album-title">"You"</div>
+      <div class="album-sub">out Friday, October 2</div>
 
       <a class="listen-link presave-link" href="https://open.spotify.com/album/2xP6hSOvHqVHnyD3r8nicv?si=041add811d654d96" target="_blank" rel="noopener noreferrer">
         PRE-SAVE
