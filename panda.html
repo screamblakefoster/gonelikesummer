@@ -81,6 +81,7 @@
     .strip-frame {
       width: 100%;
       aspect-ratio: 1.91 / 1;
+      position: relative;
       overflow-x: auto;
       overflow-y: hidden;
       cursor: grab;
@@ -97,8 +98,12 @@
     }
 
     .strip-frame img {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
       width: 400%;
-      height: 100%;
+      height: auto;
       display: block;
       max-width: none;
       user-select: none;
