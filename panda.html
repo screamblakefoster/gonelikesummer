@@ -206,6 +206,13 @@
         padding-bottom: 36px;
       }
     }
+
+    @media (min-width: 651px) {
+      .strip-frame {
+        width: auto;
+        margin: 0 auto;
+      }
+    }
   </style>
 </head>
 <body>
@@ -270,7 +277,36 @@
       }
     });
 
+    // Size the strips on desktop so ~2.5 are visible in the viewport on arrival.
+    // Mobile is left completely alone (full-width, CSS-driven aspect ratio).
+    function sizeStripsForDesktop() {
+      const frames = document.querySelectorAll(".strip-frame");
+      const isDesktop = window.matchMedia("(min-width: 651px)").matches;
+
+      if (!isDesktop) {
+        frames.forEach((f) => { f.style.height = ""; });
+        return;
+      }
+
+      const wrap = document.querySelector(".strips-wrap");
+      if (!wrap || !frames.length) return;
+
+      const gap = 14; // matches .strip-block margin-bottom
+      const wrapTop = wrap.getBoundingClientRect().top + window.scrollY;
+      const visible = window.innerHeight - wrapTop;
+
+      let h = (visible - gap * 2) / 2.5;
+      h = Math.max(120, Math.min(280, h));
+
+      frames.forEach((f) => { f.style.height = h + "px"; });
+    }
+
+    window.addEventListener("load", sizeStripsForDesktop);
+    window.addEventListener("resize", sizeStripsForDesktop);
+
     window.addEventListener("DOMContentLoaded", () => {
+      sizeStripsForDesktop();
+
       const strips = document.querySelectorAll(".strip-block");
       strips.forEach((el, i) => {
         setTimeout(() => {
