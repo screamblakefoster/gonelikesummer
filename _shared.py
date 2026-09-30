@@ -133,7 +133,7 @@ BASE_CSS = '''
     }
 '''
 
-SHOP_URL = "https://wun6e0-uf.myshopify.com"
+SHOP_URL = "https://shop.gonelikesummer.com"
 
 def nav(active):
     items = [
