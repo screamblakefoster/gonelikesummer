@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>gone like summer — Shop</title>
-
-  <link rel="icon" href="favicon.ico">
-
-  <style>
-
+BASE_CSS = '''
     :root {
       --bg: #f7f5f0;
       --fg: #1a1a1a;
@@ -54,6 +43,16 @@
       letter-spacing: 0.01em;
       margin: 0;
       font-weight: 400;
+    }
+
+    .site-title a {
+      display: inline-block;
+    }
+
+    .logo-img {
+      height: 90px;
+      width: auto;
+      display: block;
     }
 
     .site-subtitle {
@@ -107,6 +106,9 @@
       .site-title {
         font-size: 36px;
       }
+      .logo-img {
+        height: 72px;
+      }
       nav {
         gap: 24px;
         font-size: 16px;
@@ -120,62 +122,46 @@
       .site-title {
         font-size: 30px;
       }
+      .logo-img {
+        height: 60px;
+      }
       nav {
         gap: 16px;
         flex-wrap: wrap;
         font-size: 15px;
       }
     }
+'''
 
+SHOP_URL = "https://wun6e0-uf.myshopify.com"
 
-    main {
-      min-height: 40vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 40px 30px 100px;
-      text-align: center;
-    }
+def nav(active):
+    items = [
+        ("music", "music.html", False),
+        ("shows", "shows.html", False),
+        ("about", "about.html", False),
+        ("videos", "videos.html", False),
+        ("panda", "panda.html", False),
+        ("shop", SHOP_URL, False),
+    ]
+    links = []
+    for label, href, external in items:
+        extra = ' target="_blank" rel="noopener noreferrer"' if external else ''
+        if label == active:
+            links.append(f'<a class="active" href="{href}" aria-current="page"{extra}>{label}</a>')
+        else:
+            links.append(f'<a href="{href}"{extra}>{label}</a>')
+    return "\n      ".join(links)
 
-    .coming-soon {
-      font-size: 26px;
-      font-style: italic;
-      color: var(--muted);
-    }
-
-    @media (max-width: 650px) {
-      .coming-soon {
-        font-size: 22px;
-      }
-    }
-
-  </style>
-</head>
-<body>
-
-  <header>
-    <h1 class="site-title"><a href="index.html">gone like summer</a></h1>
+def header(active, subtitle=None):
+    return f'''  <header>
+    <h1 class="site-title"><a href="index.html"><img class="logo-img" src="logo.png" alt="gone like summer"></a></h1>
 
     <nav aria-label="Main navigation">
-      <a href="music.html">music</a>
-      <a href="shows.html">shows</a>
-      <a href="about.html">about</a>
-      <a href="videos.html">videos</a>
-      <a href="panda.html">panda</a>
-      <a class="active" href="shop.html" aria-current="page">shop</a>
+      {nav(active)}
     </nav>
-  </header>
+  </header>'''
 
-  <main>
-    <div class="coming-soon">
-      Coming Soon
-    </div>
-  </main>
-
-  <footer>
+FOOTER = '''  <footer>
     © 2026 gone like summer
-  </footer>
-
-</body>
-</html>
+  </footer>'''
