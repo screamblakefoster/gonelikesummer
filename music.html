@@ -58,6 +58,16 @@
       font-weight: 400;
     }
 
+    .site-title a {
+      display: inline-block;
+    }
+
+    .logo-img {
+      height: 90px;
+      width: auto;
+      display: block;
+    }
+
     .site-subtitle {
       color: var(--muted);
       font-size: 15px;
@@ -289,6 +299,10 @@
         font-size: 36px;
       }
 
+      .logo-img {
+        height: 72px;
+      }
+
       nav {
         gap: 24px;
         font-size: 16px;
@@ -320,6 +334,10 @@
 
       .site-title {
         font-size: 30px;
+      }
+
+      .logo-img {
+        height: 60px;
       }
 
       nav {
@@ -375,7 +393,7 @@
 <body>
 
   <header>
-    <h1 class="site-title"><a href="index.html">gone like summer</a></h1>
+    <h1 class="site-title"><a href="index.html"><img class="logo-img" src="logo.png" alt="gone like summer"></a></h1>
 
     <nav aria-label="Main navigation">
       <a class="active" href="music.html" aria-current="page">music</a>
