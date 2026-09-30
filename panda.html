@@ -25,6 +25,7 @@
       padding: 0;
       background: var(--bg);
       color: var(--fg);
+      overflow-x: hidden;
     }
 
     body {
@@ -209,8 +210,12 @@
 
     @media (min-width: 651px) {
       .strip-frame {
-        width: auto;
-        margin: 0 auto;
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
       }
     }
   </style>
