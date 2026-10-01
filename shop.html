@@ -152,6 +152,102 @@
       }
     }
 
+    .cd-offer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      max-width: 440px;
+    }
+
+    .cd-cover {
+      width: 220px;
+      max-width: 55vw;
+      height: auto;
+      border-radius: 4px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+    }
+
+    .cd-headline {
+      font-size: 30px;
+      font-weight: 400;
+      margin: 0;
+    }
+
+    .cd-subline {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .cd-form {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 4px;
+      width: 100%;
+    }
+
+    .cd-form input[type="email"] {
+      font-family: inherit;
+      font-size: 15px;
+      padding: 13px 16px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      color: var(--fg);
+      flex: 1 1 220px;
+      min-width: 0;
+    }
+
+    .cd-form input[type="email"]:focus {
+      outline: 2px solid var(--fg);
+      outline-offset: 1px;
+    }
+
+    .cd-form button {
+      font-family: inherit;
+      font-size: 15px;
+      padding: 13px 24px;
+      border: none;
+      border-radius: 4px;
+      background: var(--fg);
+      color: var(--bg);
+      white-space: nowrap;
+    }
+
+    .cd-form button:disabled {
+      opacity: 0.6;
+    }
+
+    .cd-message {
+      display: none;
+      color: var(--muted);
+      font-style: italic;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .cd-message.error {
+      color: #a8423a;
+      font-style: normal;
+    }
+
+    @media (max-width: 650px) {
+      .cd-headline {
+        font-size: 25px;
+      }
+      .cd-form {
+        flex-direction: column;
+      }
+      .cd-form input[type="email"],
+      .cd-form button {
+        width: 100%;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -170,14 +266,69 @@
   </header>
 
   <main>
-    <div class="coming-soon">
-      Coming Soon
+    <div class="cd-offer">
+      <img class="cd-cover" src="https://cdn.shopify.com/s/files/1/0847/8156/4122/files/frontmockup2.png?v=1790807488" alt="&quot;You&quot; CD cover">
+      <h2 class="cd-headline">get your free CD</h2>
+      <p class="cd-subline">drop your email below and we'll send you a link to claim your free copy of "You" — just cover shipping.</p>
+
+      <form class="cd-form" id="cd-form" autocomplete="off">
+        <input type="email" id="cd-email" name="email" placeholder="your email" required autocomplete="email">
+        <button type="submit" id="cd-submit">get my free cd</button>
+      </form>
+
+      <div class="cd-message" id="cd-message"></div>
     </div>
   </main>
 
   <footer>
     © 2026 gone like summer
   </footer>
+
+  <script>
+    (function () {
+      const form = document.getElementById("cd-form");
+      const emailInput = document.getElementById("cd-email");
+      const submitBtn = document.getElementById("cd-submit");
+      const message = document.getElementById("cd-message");
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const email = emailInput.value.trim();
+        if (!email) return;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "sending...";
+        message.classList.remove("error");
+        message.style.display = "none";
+
+        const body = new URLSearchParams();
+        body.append("form_type", "customer");
+        body.append("utf8", "✓");
+        body.append("contact[email]", email);
+        body.append("contact[tags]", "free-cd-signup");
+
+        fetch("https://shop.gonelikesummer.com/contact#contact_form", {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: body.toString()
+        })
+          .then(function () {
+            form.style.display = "none";
+            message.textContent = "thanks — check your inbox soon for your free CD link.";
+            message.style.display = "block";
+          })
+          .catch(function () {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "get my free cd";
+            message.textContent = "something went wrong — please try again.";
+            message.classList.add("error");
+            message.style.display = "block";
+          });
+      });
+    })();
+  </script>
 
 </body>
 </html>
