@@ -336,7 +336,7 @@
 
     <div class="entry entry-top">
       <form class="entry-form" id="entry-form" autocomplete="off">
-        <input type="text" id="entry-input" placeholder="password" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <input type="text" id="entry-input" placeholder="password" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">
         <div class="entry-error" id="entry-error"></div>
         <button type="submit" id="entry-submit">ENTER</button>
       </form>
@@ -579,7 +579,7 @@
   </div>
 
   <script>
-    const PASSWORD = "heavenisfalling";
+    const VALID_PASSWORDS = ["heavenisfalling", "heaven is falling"];
 
     const form = document.getElementById("entry-form");
     const input = document.getElementById("entry-input");
@@ -603,7 +603,7 @@
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      if (input.value.trim().toLowerCase() === PASSWORD) {
+      if (VALID_PASSWORDS.includes(input.value.trim().toLowerCase())) {
         revealStrips();
       } else {
         error.textContent = "wrong password";
