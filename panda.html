@@ -139,7 +139,7 @@
     .strip-block {
       margin-bottom: 14px;
       opacity: 0;
-      transition: opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+      transition: opacity 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
     }
 
     .strip-block:last-child {
@@ -597,7 +597,7 @@
       strips.forEach((el, i) => {
         setTimeout(() => {
           el.classList.add("in");
-        }, 100 + i * 220);
+        }, 50 + i * 110);
       });
     }
 
