@@ -271,10 +271,19 @@
       <h2 class="cd-headline">get your free CD</h2>
       <p class="cd-subline">drop your email below and we'll send you a link to claim your free copy of "You" — just cover shipping.</p>
 
-      <form class="cd-form" id="cd-form" autocomplete="off">
-        <input type="email" id="cd-email" name="email" placeholder="your email" required autocomplete="email">
+      <form
+        class="cd-form"
+        id="cd-form"
+        autocomplete="off"
+        target="cd-hidden-iframe"
+        action="https://docs.google.com/forms/d/e/1FAIpQLSewwQjElwSiuw74Rtdp0gxGg47PTjhjYVPLcd13W6FoYuTIdg/formResponse"
+        method="POST"
+      >
+        <input type="email" id="cd-email" name="entry.165660520" placeholder="your email" required autocomplete="email">
         <button type="submit" id="cd-submit">get my free cd</button>
       </form>
+
+      <iframe name="cd-hidden-iframe" id="cd-hidden-iframe" style="display:none;" title="signup"></iframe>
 
       <div class="cd-message" id="cd-message"></div>
     </div>
@@ -290,42 +299,31 @@
       const emailInput = document.getElementById("cd-email");
       const submitBtn = document.getElementById("cd-submit");
       const message = document.getElementById("cd-message");
+      const iframe = document.getElementById("cd-hidden-iframe");
 
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
+      let submitted = false;
 
+      form.addEventListener("submit", function () {
         const email = emailInput.value.trim();
         if (!email) return;
 
+        // Let the form submit natively into the hidden iframe (a real
+        // cross-origin form POST, not fetch) — Google Forms doesn't allow
+        // reading the response, but the iframe's load event tells us the
+        // submission round-trip finished.
+        submitted = true;
         submitBtn.disabled = true;
         submitBtn.textContent = "sending...";
         message.classList.remove("error");
         message.style.display = "none";
+      });
 
-        const body = new URLSearchParams();
-        body.append("form_type", "customer");
-        body.append("utf8", "✓");
-        body.append("contact[email]", email);
-        body.append("contact[tags]", "free-cd-signup");
-
-        fetch("https://shop.gonelikesummer.com/contact#contact_form", {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: body.toString()
-        })
-          .then(function () {
-            form.style.display = "none";
-            message.textContent = "thanks — check your inbox soon for your free CD link.";
-            message.style.display = "block";
-          })
-          .catch(function () {
-            submitBtn.disabled = false;
-            submitBtn.textContent = "get my free cd";
-            message.textContent = "something went wrong — please try again.";
-            message.classList.add("error");
-            message.style.display = "block";
-          });
+      iframe.addEventListener("load", function () {
+        if (!submitted) return; // ignore the iframe's own initial blank load
+        submitted = false;
+        form.style.display = "none";
+        message.textContent = "thanks — check your inbox soon for your free CD link.";
+        message.style.display = "block";
       });
     })();
   </script>
