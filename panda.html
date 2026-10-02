@@ -1059,21 +1059,33 @@
     // Trackpad / wheel paging. We swallow every wheel event anywhere over
     // the open overlay — not just horizontal ones — so a horizontal swipe
     // can never fall through to the browser's back/forward page gesture.
-    let wheelCooldown = false;
+    //
+    // A single trackpad swipe fires a long burst of wheel events (often
+    // with momentum/inertia that keeps going for a while), so a fixed
+    // cooldown can expire mid-gesture and let a second step slip through.
+    // Instead, lock on the first qualifying event and only release the
+    // lock once wheel events have stopped arriving for a bit — i.e. once
+    // the gesture has actually ended, however long it ran.
+    let wheelLocked = false;
+    let wheelIdleTimer = null;
 
     overlay.addEventListener(
       "wheel",
       (e) => {
         if (!overlay.classList.contains("open")) return;
         e.preventDefault();
-        if (wheelCooldown) return;
         if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+
+        clearTimeout(wheelIdleTimer);
+        wheelIdleTimer = setTimeout(() => {
+          wheelLocked = false;
+        }, 280);
+
+        if (wheelLocked) return;
         if (Math.abs(e.deltaX) < 8) return;
+
         stepFrame(e.deltaX > 0 ? 1 : -1);
-        wheelCooldown = true;
-        setTimeout(() => {
-          wheelCooldown = false;
-        }, 350);
+        wheelLocked = true;
       },
       { passive: false }
     );
