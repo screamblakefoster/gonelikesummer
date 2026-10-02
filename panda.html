@@ -1112,15 +1112,23 @@
     // All we do here is listen for native scrolling to settle and sync
     // our own state (dots, arrow disabled state, status text) to wherever
     // it landed.
-    let scrollSettleTimer = null;
+    // The dots/arrows are just a live indicator of scroll position, so
+    // there's no reason to wait for the scroll to fully settle before
+    // updating them — on mobile, momentum keeps "scroll" events (and so a
+    // settle debounce) firing for a while, which made the dots visibly
+    // lag behind the photo. Track position on every frame instead via
+    // requestAnimationFrame, so it moves in lockstep with the swipe.
+    let scrollTicking = false;
 
     focusFrame.addEventListener("scroll", () => {
-      clearTimeout(scrollSettleTimer);
-      scrollSettleTimer = setTimeout(() => {
+      if (scrollTicking) return;
+      scrollTicking = true;
+      requestAnimationFrame(() => {
         const idx = Math.round(focusFrame.scrollLeft / focusFrame.clientWidth);
         currentFrame = Math.max(0, Math.min(FRAMES_PER_STRIP - 1, idx));
         updateChrome();
-      }, 120);
+        scrollTicking = false;
+      });
     });
 
     // Belt-and-suspenders: iOS Safari can still let a stray drag scroll
