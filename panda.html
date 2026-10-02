@@ -1045,11 +1045,17 @@
         focusDots.appendChild(dot);
       }
 
-      focusFrame.scrollLeft = 0;
-      updateChrome();
       overlay.classList.add("open");
       lockBodyScroll();
       focusClose.focus();
+
+      // Reset scroll position only after the overlay is actually visible —
+      // setting scrollLeft while the overlay is still display:none doesn't
+      // stick, which is why the strip used to reopen on whatever photo it
+      // was last left on while the dots (forced to frame 0 above) fell out
+      // of sync with it until the next swipe corrected them.
+      focusFrame.scrollLeft = 0;
+      updateChrome();
     }
 
     function closeFocus() {
