@@ -1060,14 +1060,25 @@
     // the open overlay — not just horizontal ones — so a horizontal swipe
     // can never fall through to the browser's back/forward page gesture.
     //
-    // A single trackpad swipe fires a long burst of wheel events (often
-    // with momentum/inertia that keeps going for a while), so a fixed
-    // cooldown can expire mid-gesture and let a second step slip through.
-    // Instead, lock on the first qualifying event and only release the
-    // lock once wheel events have stopped arriving for a bit — i.e. once
-    // the gesture has actually ended, however long it ran.
-    let wheelLocked = false;
-    let wheelIdleTimer = null;
+    // Getting exactly one step per swipe out of the wheel API is fiddly:
+    // there's no real "gesture start/end" signal, only a stream of deltas.
+    // A pure time lock backfires both ways — a cooldown too short lets a
+    // single long/fast swipe cross the trigger twice before it's done,
+    // while a lock that waits for events to go fully idle can stay locked
+    // for a second or more through a trackpad's momentum/inertia tail,
+    // swallowing the next real swipe. The combination that actually holds
+    // up: accumulate distance and step once per threshold crossing (so a
+    // small nudge isn't overly sensitive), paired with a short fixed
+    // cooldown right after a step (swallows the tail end of the SAME
+    // swipe) and a minimum per-event delta (so the slow trickle of a
+    // momentum tail — a long run of near-zero deltas — never accumulates
+    // into a phantom second step even after the cooldown ends).
+    let wheelAccum = 0;
+    let wheelCooling = false;
+    let wheelStaleTimer = null;
+    const WHEEL_STEP_THRESHOLD = 70;
+    const WHEEL_MIN_DELTA = 6;
+    const WHEEL_COOLDOWN_MS = 150;
 
     overlay.addEventListener(
       "wheel",
@@ -1075,17 +1086,27 @@
         if (!overlay.classList.contains("open")) return;
         e.preventDefault();
         if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+        if (wheelCooling) return;
+        if (Math.abs(e.deltaX) < WHEEL_MIN_DELTA) return;
 
-        clearTimeout(wheelIdleTimer);
-        wheelIdleTimer = setTimeout(() => {
-          wheelLocked = false;
-        }, 280);
+        // Forget a weak, never-completed nudge if things go quiet for a
+        // while — purely hygiene, this is far longer than the cooldown
+        // above and never blocks a step on its own.
+        clearTimeout(wheelStaleTimer);
+        wheelStaleTimer = setTimeout(() => {
+          wheelAccum = 0;
+        }, 700);
 
-        if (wheelLocked) return;
-        if (Math.abs(e.deltaX) < 8) return;
+        wheelAccum += e.deltaX;
 
-        stepFrame(e.deltaX > 0 ? 1 : -1);
-        wheelLocked = true;
+        if (Math.abs(wheelAccum) >= WHEEL_STEP_THRESHOLD) {
+          stepFrame(wheelAccum > 0 ? 1 : -1);
+          wheelAccum = 0;
+          wheelCooling = true;
+          setTimeout(() => {
+            wheelCooling = false;
+          }, WHEEL_COOLDOWN_MS);
+        }
       },
       { passive: false }
     );
