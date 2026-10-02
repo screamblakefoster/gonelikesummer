@@ -945,18 +945,25 @@
           frame.scrollLeft = startScroll - dx;
         });
 
-        // Touch: a tap that didn't scroll the strip opens the focus view.
+        // Touch: a tap that didn't scroll the strip (or the page) opens the
+        // focus view. We have to check vertical movement too — a finger
+        // scrolling the page down while passing over a strip barely moves
+        // in X, so an X-only check misreads that page-scroll as a tap.
         let touchStartX = 0;
+        let touchStartY = 0;
         let touchStartScroll = 0;
         let touchMoved = 0;
+        let touchMovedY = 0;
 
         frame.addEventListener(
           "touchstart",
           (e) => {
             const t = e.touches[0];
             touchStartX = t.pageX;
+            touchStartY = t.pageY;
             touchStartScroll = frame.scrollLeft;
             touchMoved = 0;
+            touchMovedY = 0;
           },
           { passive: true }
         );
@@ -966,12 +973,13 @@
           (e) => {
             const t = e.touches[0];
             touchMoved = Math.max(touchMoved, Math.abs(t.pageX - touchStartX));
+            touchMovedY = Math.max(touchMovedY, Math.abs(t.pageY - touchStartY));
           },
           { passive: true }
         );
 
         frame.addEventListener("touchend", () => {
-          if (touchMoved < 6) openFocus(stripIndex);
+          if (touchMoved < 6 && touchMovedY < 6) openFocus(stripIndex);
         });
       });
     });
