@@ -432,8 +432,10 @@
       transition: background 0.2s ease, opacity 0.2s ease;
     }
 
-    .focus-nav:hover {
-      background: rgba(20, 18, 14, 0.7);
+    @media (hover: hover) and (pointer: fine) {
+      .focus-nav:hover {
+        background: rgba(20, 18, 14, 0.7);
+      }
     }
 
     .focus-nav:disabled {
@@ -459,8 +461,10 @@
       transition: background 0.2s ease;
     }
 
-    .focus-close:hover {
-      background: rgba(20, 18, 14, 0.7);
+    @media (hover: hover) and (pointer: fine) {
+      .focus-close:hover {
+        background: rgba(20, 18, 14, 0.7);
+      }
     }
 
     .focus-dots {
@@ -997,14 +1001,36 @@
 
       renderFocus();
       overlay.classList.add("open");
-      document.body.style.overflow = "hidden";
+      lockBodyScroll();
       focusClose.focus();
     }
 
     function closeFocus() {
       overlay.classList.remove("open");
-      document.body.style.overflow = "";
+      unlockBodyScroll();
       if (lastFocusedFrame) lastFocusedFrame.focus();
+    }
+
+    // overflow:hidden on body alone doesn't reliably stop background
+    // scroll on iOS Safari when a finger drags over the backdrop, so the
+    // body is pinned in place with position:fixed while the focus view
+    // is open and restored to its exact scroll position on close.
+    let savedScrollY = 0;
+
+    function lockBodyScroll() {
+      savedScrollY = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${savedScrollY}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+    }
+
+    function unlockBodyScroll() {
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      window.scrollTo(0, savedScrollY);
     }
 
     function stepFrame(delta) {
@@ -1029,6 +1055,41 @@
       if (e.key === "ArrowLeft") stepFrame(-1);
       if (e.key === "ArrowRight") stepFrame(1);
     });
+
+    // Trackpad / wheel paging. We swallow every wheel event anywhere over
+    // the open overlay — not just horizontal ones — so a horizontal swipe
+    // can never fall through to the browser's back/forward page gesture.
+    let wheelCooldown = false;
+
+    overlay.addEventListener(
+      "wheel",
+      (e) => {
+        if (!overlay.classList.contains("open")) return;
+        e.preventDefault();
+        if (wheelCooldown) return;
+        if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+        if (Math.abs(e.deltaX) < 8) return;
+        stepFrame(e.deltaX > 0 ? 1 : -1);
+        wheelCooldown = true;
+        setTimeout(() => {
+          wheelCooldown = false;
+        }, 350);
+      },
+      { passive: false }
+    );
+
+    // Belt-and-suspenders: iOS Safari can still let a stray drag scroll
+    // the page behind a fixed overlay, even with the body pinned via
+    // lockBodyScroll(). Nothing inside the modal has its own scrollable
+    // content (the frame-swipe below reads touch coordinates, not native
+    // scroll), so it's safe to block every touchmove while it's open.
+    overlay.addEventListener(
+      "touchmove",
+      (e) => {
+        if (overlay.classList.contains("open")) e.preventDefault();
+      },
+      { passive: false }
+    );
 
     // Swipe through frames inside the focus view
     (function () {
