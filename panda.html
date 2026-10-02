@@ -323,6 +323,204 @@
         width: 133.33%;
       }
     }
+
+    /* =========================
+       FOCUS VIEW (photostrip lightbox)
+       ========================= */
+
+    .strip-frame {
+      touch-action: pan-x;
+    }
+
+    .focus-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(20, 18, 14, 0.82);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .focus-overlay.open {
+      display: flex;
+      opacity: 1;
+    }
+
+    .focus-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      max-width: 640px;
+      width: 100%;
+      transform: scale(0.94);
+      opacity: 0;
+      transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.35s ease;
+    }
+
+    .focus-overlay.open .focus-card {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .focus-hint {
+      color: #d8d3c6;
+      font-style: italic;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-align: center;
+      opacity: 0.85;
+      animation: focus-hint-pulse 2.6s ease-in-out infinite;
+    }
+
+    @keyframes focus-hint-pulse {
+      0%, 100% { opacity: 0.55; }
+      50% { opacity: 0.95; }
+    }
+
+    .focus-stage {
+      position: relative;
+      width: 100%;
+    }
+
+    .focus-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 55 / 36;
+      overflow: hidden;
+      background: #000;
+      border-radius: 2px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+    }
+
+    .focus-frame img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 500%;
+      height: 100%;
+      max-width: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    .focus-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(20, 18, 14, 0.45);
+      color: #f7f5f0;
+      border: none;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 20px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s ease, opacity 0.2s ease;
+    }
+
+    .focus-nav:hover {
+      background: rgba(20, 18, 14, 0.7);
+    }
+
+    .focus-nav:disabled {
+      opacity: 0.25;
+      pointer-events: none;
+    }
+
+    .focus-nav.prev { left: 10px; }
+    .focus-nav.next { right: 10px; }
+
+    .focus-close {
+      position: absolute;
+      top: -18px;
+      right: -18px;
+      background: var(--fg);
+      color: var(--bg);
+      border: none;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      font-size: 16px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .focus-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .focus-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #d8d3c6;
+      opacity: 0.4;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .focus-dot.active {
+      opacity: 1;
+      transform: scale(1.3);
+    }
+
+    .focus-caption {
+      color: #efece3;
+      font-style: italic;
+      font-size: 16px;
+      line-height: 1.6;
+      text-align: center;
+      max-width: 540px;
+    }
+
+    .focus-caption.empty {
+      display: none;
+    }
+
+    @media (max-width: 650px) {
+      .focus-overlay {
+        padding: 16px;
+      }
+      .focus-card {
+        max-width: 460px;
+      }
+      .focus-nav {
+        width: 36px;
+        height: 36px;
+        font-size: 17px;
+      }
+      .focus-close {
+        top: -14px;
+        right: -6px;
+      }
+      .focus-caption {
+        font-size: 14px;
+      }
+    }
+
+    @media (min-width: 900px) {
+      .focus-card {
+        max-width: 760px;
+      }
+      .focus-caption {
+        max-width: 620px;
+        font-size: 17px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -587,8 +785,34 @@
 
   </div>
 
+  <div class="focus-overlay" id="focus-overlay" role="dialog" aria-modal="true" aria-label="Photostrip viewer">
+    <div class="focus-card">
+      <div class="focus-hint">⟵ scroll to see the rest of the strip ⟶</div>
+      <div class="focus-stage">
+        <button class="focus-close" id="focus-close" aria-label="Close">✕</button>
+        <div class="focus-frame">
+          <img id="focus-img" src="" alt="">
+        </div>
+        <button class="focus-nav prev" id="focus-prev" aria-label="Previous photo">‹</button>
+        <button class="focus-nav next" id="focus-next" aria-label="Next photo">›</button>
+      </div>
+      <div class="focus-dots" id="focus-dots"></div>
+      <p class="focus-caption" id="focus-caption"></p>
+    </div>
+  </div>
+
   <script>
     const VALID_PASSWORDS = ["heavenisfalling", "heaven is falling"];
+
+    // Strip captions — keyed by strip number (matches panda-strip-N.jpg).
+    // Add more lines here as descriptions come in; strips without an entry
+    // just show no caption.
+    const STRIP_DESCRIPTIONS = {
+      // 1: "...",
+      // 2: "...",
+    };
+
+    const FRAMES_PER_STRIP = 5;
 
     const form = document.getElementById("entry-form");
     const input = document.getElementById("entry-input");
@@ -624,7 +848,7 @@
     window.addEventListener("DOMContentLoaded", () => {
       // Wheel scroll (vertical wheel/trackpad input slides the strip horizontally)
       const frames = document.querySelectorAll(".strip-frame");
-      frames.forEach((frame) => {
+      frames.forEach((frame, stripIndex) => {
         frame.addEventListener(
           "wheel",
           (e) => {
@@ -638,31 +862,182 @@
           { passive: false }
         );
 
-        // Click-and-drag scroll
+        // Click-and-drag scroll (also doubles as the click-to-open gesture:
+        // a mouseup with negligible movement counts as a click, not a drag).
         let isDown = false;
         let startX = 0;
         let startScroll = 0;
+        let moved = 0;
 
         frame.addEventListener("mousedown", (e) => {
           isDown = true;
+          moved = 0;
           frame.classList.add("dragging");
           startX = e.pageX;
           startScroll = frame.scrollLeft;
         });
 
-        window.addEventListener("mouseup", () => {
+        window.addEventListener("mouseup", (e) => {
+          if (!isDown) return;
           isDown = false;
           frame.classList.remove("dragging");
+          if (moved < 6 && e.target.closest(".strip-frame") === frame) {
+            openFocus(stripIndex);
+          }
         });
 
         window.addEventListener("mousemove", (e) => {
           if (!isDown) return;
           e.preventDefault();
           const dx = e.pageX - startX;
+          moved = Math.max(moved, Math.abs(dx));
           frame.scrollLeft = startScroll - dx;
+        });
+
+        // Touch: a tap that didn't scroll the strip opens the focus view.
+        let touchStartX = 0;
+        let touchStartScroll = 0;
+        let touchMoved = 0;
+
+        frame.addEventListener(
+          "touchstart",
+          (e) => {
+            const t = e.touches[0];
+            touchStartX = t.pageX;
+            touchStartScroll = frame.scrollLeft;
+            touchMoved = 0;
+          },
+          { passive: true }
+        );
+
+        frame.addEventListener(
+          "touchmove",
+          (e) => {
+            const t = e.touches[0];
+            touchMoved = Math.max(touchMoved, Math.abs(t.pageX - touchStartX));
+          },
+          { passive: true }
+        );
+
+        frame.addEventListener("touchend", () => {
+          if (touchMoved < 6) openFocus(stripIndex);
         });
       });
     });
+
+    // =========================
+    // FOCUS VIEW
+    // =========================
+
+    const overlay = document.getElementById("focus-overlay");
+    const focusImg = document.getElementById("focus-img");
+    const focusCaption = document.getElementById("focus-caption");
+    const focusDots = document.getElementById("focus-dots");
+    const focusPrev = document.getElementById("focus-prev");
+    const focusNext = document.getElementById("focus-next");
+    const focusClose = document.getElementById("focus-close");
+
+    let currentStrip = 0;
+    let currentFrame = 0;
+    let lastFocusedFrame = null;
+
+    function stripSrc(stripIndex) {
+      return `photostrips/panda-strip-${stripIndex + 1}.jpg`;
+    }
+
+    function renderFocus() {
+      const offset = -(currentFrame * (100 / FRAMES_PER_STRIP));
+      focusImg.style.transform = `translateX(${offset}%)`;
+      [...focusDots.children].forEach((dot, i) => {
+        dot.classList.toggle("active", i === currentFrame);
+      });
+      focusPrev.disabled = currentFrame === 0;
+      focusNext.disabled = currentFrame === FRAMES_PER_STRIP - 1;
+    }
+
+    function openFocus(stripIndex) {
+      currentStrip = stripIndex;
+      currentFrame = 0;
+      lastFocusedFrame = document.activeElement;
+
+      const stripNumber = stripIndex + 1;
+      focusImg.src = stripSrc(stripIndex);
+      focusImg.alt = `Panda cam strip ${stripNumber}, photo 1 of ${FRAMES_PER_STRIP}`;
+
+      const caption = STRIP_DESCRIPTIONS[stripNumber] || "";
+      focusCaption.textContent = caption;
+      focusCaption.classList.toggle("empty", !caption);
+
+      focusDots.innerHTML = "";
+      for (let i = 0; i < FRAMES_PER_STRIP; i++) {
+        const dot = document.createElement("span");
+        dot.className = "focus-dot";
+        focusDots.appendChild(dot);
+      }
+
+      renderFocus();
+      overlay.classList.add("open");
+      document.body.style.overflow = "hidden";
+      focusClose.focus();
+    }
+
+    function closeFocus() {
+      overlay.classList.remove("open");
+      document.body.style.overflow = "";
+      if (lastFocusedFrame) lastFocusedFrame.focus();
+    }
+
+    function stepFrame(delta) {
+      const next = currentFrame + delta;
+      if (next < 0 || next >= FRAMES_PER_STRIP) return;
+      currentFrame = next;
+      focusImg.alt = `Panda cam strip ${currentStrip + 1}, photo ${currentFrame + 1} of ${FRAMES_PER_STRIP}`;
+      renderFocus();
+    }
+
+    focusPrev.addEventListener("click", () => stepFrame(-1));
+    focusNext.addEventListener("click", () => stepFrame(1));
+    focusClose.addEventListener("click", closeFocus);
+
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) closeFocus();
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (!overlay.classList.contains("open")) return;
+      if (e.key === "Escape") closeFocus();
+      if (e.key === "ArrowLeft") stepFrame(-1);
+      if (e.key === "ArrowRight") stepFrame(1);
+    });
+
+    // Swipe through frames inside the focus view
+    (function () {
+      let startX = 0;
+      let active = false;
+
+      const stage = document.querySelector(".focus-frame");
+
+      stage.addEventListener(
+        "touchstart",
+        (e) => {
+          startX = e.touches[0].pageX;
+          active = true;
+        },
+        { passive: true }
+      );
+
+      stage.addEventListener(
+        "touchend",
+        (e) => {
+          if (!active) return;
+          active = false;
+          const dx = e.changedTouches[0].pageX - startX;
+          if (Math.abs(dx) < 30) return;
+          stepFrame(dx < 0 ? 1 : -1);
+        },
+        { passive: true }
+      );
+    })();
   </script>
 
 </body>
