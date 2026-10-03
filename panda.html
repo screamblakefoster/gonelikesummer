@@ -336,6 +336,7 @@
       align-items: center;
       justify-content: center;
       padding: 24px;
+      overflow-y: auto;
       background: rgba(20, 18, 14, 0.82);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
@@ -515,10 +516,36 @@
       line-height: 1.6;
       text-align: center;
       max-width: 540px;
+      max-height: 38vh;
+      overflow-y: auto;
     }
 
     .focus-caption.empty {
       display: none;
+    }
+
+    /* Two-author captions (Kenny + John both wrote one) render as stacked
+       blocks, each with its own name label. */
+    .focus-caption-block + .focus-caption-block {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(239, 236, 227, 0.2);
+    }
+
+    .focus-caption-author {
+      display: block;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #d8d3c6;
+      opacity: 0.75;
+      margin-bottom: 4px;
+    }
+
+    .focus-caption-text {
+      margin: 0;
     }
 
     @media (max-width: 650px) {
@@ -839,7 +866,7 @@
         </div>
       </div>
       <div class="focus-dots" id="focus-dots"></div>
-      <p class="focus-caption" id="focus-caption"></p>
+      <div class="focus-caption" id="focus-caption"></div>
       <span class="sr-only" id="focus-status" aria-live="polite"></span>
     </div>
   </div>
@@ -848,19 +875,40 @@
     const VALID_PASSWORDS = ["heavenisfalling", "heaven is falling"];
 
     // Strip captions — keyed by strip number (matches panda-strip-N.jpg).
-    // Add more lines here as descriptions come in; strips without an entry
+    // A value can be a plain string (one unattributed caption) or an object
+    // like { kenny: "...", john: "..." } when both of them wrote a blurb —
+    // openFocus() renders each key as its own labeled block.
+    // Add more entries here as descriptions come in; strips without one
     // just show no caption.
     const STRIP_DESCRIPTIONS = {
-      1: "first panda cam reel",
-      2: "we just got to nyc for our first sessions of the album. we were still kinda unsure of the exact sound we wanted, but we knew the direction. not sure what the first photo is — here's me and will, and john's hand (i think he was finding the brightness), then us walking around brooklyn. kenny in studio, day one!! (i think we wrote strings this day)",
-      3: "woah, back to the premiere. blake came out on a whim — legend. here's us walking around times square. inception. john and i sharing a full size in manhattan, too small! kenny writing what i think was desires in the studio!!",
-      4: "we wanted to go for a walk and ended up in washington square park, where the birds are plenty and the squirrels are fat. here's thomas laying down the acoustic guitar for strings!",
-      5: "first night in nyc. we're starting to plot the concept of the album. some plants in the studio! moooooog. john writing on the back of a poster, which we used religiously to tell the tale of the man throughout the album.",
-      6: "john taking pictures of himself before he went on a walk, which he did frequently on this trip. he took a nice photo of me walking. i believe this is riley in front of the door in the studio. also, our 'gasp' cover art. trinkets!!",
-      7: "a list of ideas and statements we lived by for the album. the acoustic guitar that wrote gasp, strings, and other beautiful elements on the album. perry mason pulled up! casey shoes in the flesh, writing words for the album. john's head, captured.",
-      8: "someone took a photo of me lounging, heavyyy. hey look, it's riley! iggy recording us in the studio! john is gearing up to go in the booth to record. kenny's computer working on the album in session.",
-      9: "this is the concept board for the album — maybe it's the task list, so we didn't lose track of everything we were doing. it was such a process, but a beautiful journey! honestly, don't know what these other ones are — i think we went to a japanese restaurant and had incredible food.",
-      10: "kenny, john, and iggy going through the board to see what is goooood. slide studios! kenny playing with the compression on john's vocal recordings. the desk at the studio. conceptual ideas for the album's journey.",
+      1: "the first strip. Sign. Pool. Runway Ye. Friends. Movie.",
+      2: {
+        kenny: "we just got to nyc for our first sessions of the album. Not sure what that first photo is. We were still kinda unsure of the exact sound we wanted, but we knew the direction. kenny and will, John hand (finding the brightness of the print), us walking around brooklyn. kenny in the studio, day one!! (i think we wrote strings this day)",
+        john: "first photo a misprint. love those.",
+      },
+      3: "movie premiere night 1. blake came out on a whim — legend. walking home from the film. Met an artist while walking through the park, bought this painting from him, took a ton of photos of it then took this photo. john and kenny sharing a full size bed in manhattan hotel, too small too tired to care! kenny writing what i think was desires in the studio!!",
+      4: "we wanted to go for a walk and ended up in washington square park, where the birds are plenty and the squirrels are fat. Cover art for belief. 3 shadows. thomas playing the acoustic guitar for strings. Graffiti character I loved",
+      5: {
+        kenny: "first night in nyc. we're starting to plot the concept of the album. some plants in the studio! moooooog (instrument) john writing on the back of a poster.",
+        john: "My take on this strip: the theme of the posters was random tbh. I just like to draw my thoughts out lots of times for whatever it may be. For albums in particular I tend to have a lot of ideas and stories or lines where they mean something to me but no one else. This album experience was interesting because most of them needed to be real for everyone to see so we could all communicate and get the feeling across. So much trust and growth in each other for this one. the posters were everything that's why you see them so much. Whenever you need to write just start writing. Forget the format or the canvas. Paper towel. Napkin. Receipt. Whatever you have. The idea comes first.",
+      },
+      6: {
+        kenny: "john taking pictures of himself before he went on a walk, which he did frequently on this trip. he took a nice photo of me walking. i believe this is riley in front of the door in the studio. also, our 'gasp' cover art. trinkets!!",
+        john: "The color on the birds over this strip makes it for me. Yes yes lots of walks. NYC is the greatest city in the world to walk. Step outside and there's a story (shout out the Neistat brothers and Tom Sachs) this album was a rediscovery of the writing process for me. I haven't written this way since I was a kid. Very direct but not lazy. Last few years I've been writing so much that was direct but didn't care how the words felt together. I just wanted them out. For this I wanted them out but also needed them to be correct. Which is weird when you also just want to express a very particular feeling and story. Usually in art there isn't a right or wrong, but when there is it's very humbling.",
+      },
+      7: "thoughts. the acoustic guitar that wrote gasp, strings, and others on the album. perry. casey. john.",
+      8: {
+        kenny: "someone took a photo of me lounging, heavyyy. hey look, it's riley! iggy recording us in the studio! john is gearing up to go in the booth to record. kenny's computer working on the album in session.",
+        john: "I do tend to pick a theme strip by strip otherwise i get bored of them. This theme was people. Gave Riley the cam to snap one of me then the final one is whatever we were working on at the time. These are all moments in time for me. This strip is so fire bc it shows us all in action and the thing (abelton) capturing it all in musical form. Love this one.",
+      },
+      9: {
+        kenny: "this is the concept board for the album — maybe it's the task list, so we didn't lose track of everything we were doing. it was such a process, but a beautiful journey! honestly, don't know what these other ones are — i think we went to a japanese restaurant and had incredible food.",
+        john: "Board. Meeting. Ashtray. Walk. Cone. (Was gonna leave this one this short but this is lowkey exactly how I think when I'm doing a panda strip. Just 5 frames summarized and how they look together in mind. I was just printing one photo at a time at first but then realized if I didn't rip it I could do strips. My favorite art is zoomed out. Like a collection of paintings on a wall. Or a bunch of cover arts by a musician.)",
+      },
+      10: {
+        kenny: "kenny, john, and iggy going through the board to see what is goooood. slide studios! kenny playing with the compression on john's vocal recordings. the desk at the studio. conceptual ideas for the album's journey.",
+        john: "I gotta write the rest of these later",
+      },
     };
 
     const FRAMES_PER_STRIP = 5;
@@ -1023,6 +1071,42 @@
       focusStatus.textContent = `Photo ${currentFrame + 1} of ${FRAMES_PER_STRIP}`;
     }
 
+    // A strip's description is either a plain string (one unattributed
+    // caption) or an object like { kenny: "...", john: "..." } when both of
+    // them wrote a blurb for it — each key becomes its own labeled block.
+    function renderCaption(description) {
+      focusCaption.innerHTML = "";
+
+      if (!description) {
+        focusCaption.classList.add("empty");
+        return;
+      }
+
+      focusCaption.classList.remove("empty");
+
+      if (typeof description === "string") {
+        focusCaption.textContent = description;
+        return;
+      }
+
+      Object.entries(description).forEach(([author, text]) => {
+        const block = document.createElement("div");
+        block.className = "focus-caption-block";
+
+        const label = document.createElement("span");
+        label.className = "focus-caption-author";
+        label.textContent = author.charAt(0).toUpperCase() + author.slice(1);
+
+        const body = document.createElement("p");
+        body.className = "focus-caption-text";
+        body.textContent = text;
+
+        block.appendChild(label);
+        block.appendChild(body);
+        focusCaption.appendChild(block);
+      });
+    }
+
     function openFocus(stripIndex) {
       currentStrip = stripIndex;
       currentFrame = 0;
@@ -1034,9 +1118,7 @@
         slide.style.backgroundImage = `url(${src})`;
       });
 
-      const caption = STRIP_DESCRIPTIONS[stripNumber] || "";
-      focusCaption.textContent = caption;
-      focusCaption.classList.toggle("empty", !caption);
+      renderCaption(STRIP_DESCRIPTIONS[stripNumber]);
 
       focusDots.innerHTML = "";
       for (let i = 0; i < FRAMES_PER_STRIP; i++) {
