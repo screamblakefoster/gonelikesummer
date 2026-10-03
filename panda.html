@@ -1230,12 +1230,14 @@
     // Belt-and-suspenders: iOS Safari can still let a stray drag scroll
     // the page behind a fixed overlay, even with the body pinned via
     // lockBodyScroll(). Block touchmove everywhere over the modal EXCEPT
-    // inside .focus-frame, which needs real touchmove to scroll natively.
+    // inside .focus-frame (the photo swiper) and .focus-caption (which
+    // scrolls on its own when a two-author caption runs long).
     overlay.addEventListener(
       "touchmove",
       (e) => {
         if (!overlay.classList.contains("open")) return;
         if (e.target.closest(".focus-frame")) return;
+        if (e.target.closest(".focus-caption")) return;
         e.preventDefault();
       },
       { passive: false }
